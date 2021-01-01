@@ -32,12 +32,12 @@ import java.util.stream.Collectors;
 public class combatRevamp
 {
     // Settings
-    public static long timeBetweenDashes = 5; // tenths of a second
-    public static double dashMultiplier = 10;
-    public static double dashAbsolute = 2;
-    public static double dashYMomentum = 1;
-    public static int dashType = 1;
-    public static int dashStaminaUsage = 20;
+    static long timeBetweenDashes = 5; // tenths of a second
+    static double dashMultiplier = 10;
+    static double dashAbsolute = 2;
+    static double dashYMomentum = 1;
+    static int dashType = 1;
+    static int dashStaminaUsage = 20;
     /*
     Dash Types:
     0 - dash that goes in current momentum direction (multiplies x/z by dashMultiplier)
@@ -45,28 +45,28 @@ public class combatRevamp
     2 - dash 1 and set y velocity to dashYMomentum
      */
 
-    public static int NumberOfJumps = 3;
-    public static double extraJumpAbsolute = 0.6; // 0.4 = 1 block.    0.6 = 2.2 blocks.   1 = 5 blocks.
+    static int NumberOfJumps = 3;
+    static double extraJumpAbsolute = 0.6; // 0.4 = 1 block.    0.6 = 2.2 blocks.   1 = 5 blocks.
 
-    public static int maxStamina = 100;
-    public static double staminaRechangeTimeDelay = 1;
-    public static int staminaPerSecond = 10;
-    public static int staminaUpdateRate = 10; // ms.
+    static int maxStamina = 100;
+    static double staminaRechangeTimeDelay = 1;
+    static int staminaPerSecond = 10;
+    static int staminaUpdateRate = 10; // ms.
 
 
     // Global Vars
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static long lastDash = 0;
-    public static ArrayList<KeyBinding> keyBindings = new ArrayList<>();
-    public static boolean canDashAir = true;
-    public static int extraJumpsUsed = 0;
-    public static MovementInput movementInputObject;
-    public static double currentStamina = 100;
-    public static long lastStaminaUsage = 0; // unix Epoch in ms
-    public static long lastStaminaUpdate = 0; // unix epoch in ms
-    public static boolean waitingForKeyDownJump = false;
+    static long lastDash = 0;
+    static ArrayList<KeyBinding> keyBindings = new ArrayList<>();
+    static boolean canDashAir = true;
+    static int extraJumpsUsed = 0;
+    static MovementInput movementInputObject;
+    static double currentStamina = 100;
+    static long lastStaminaUsage = 0; // unix Epoch in ms
+    static long lastStaminaUpdate = 0; // unix epoch in ms
+    static boolean waitingForKeyDownJump = false;
 
    // private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, "examplemod");
 

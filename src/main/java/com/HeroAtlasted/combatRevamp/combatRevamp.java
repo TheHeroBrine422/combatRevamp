@@ -1,10 +1,9 @@
-package com.example.examplemod;
+package com.HeroAtlasted.combatRevamp;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.vector.Vector2f;
@@ -33,9 +32,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.HeroAtlasted.combatRevamp.extraJumps;
+
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod("examplemod")
-public class ExampleMod
+@Mod("combatRevamp")
+public class combatRevamp
 {
     // Settings
     public static long timeBetweenDashes = 5; // tenths of a second
@@ -78,7 +79,7 @@ public class ExampleMod
 
   //  public static final RegistryObject<Block> ROCK_BLOCK = BLOCKS.register("rock", () -> new Block(Block.Properties.create(Material.ROCK)));
 
-    public ExampleMod() {
+    public combatRevamp() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -89,6 +90,7 @@ public class ExampleMod
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
         MinecraftForge.EVENT_BUS.register(new Events());
+        MinecraftForge.EVENT_BUS.register(new extraJumps());
 
      //   BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
@@ -100,6 +102,8 @@ public class ExampleMod
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+
+        MinecraftForge.EVENT_BUS.register(new extraJumps());
 
         // setup keybinding
         keyBindings.add(new KeyBinding("Dash", 98, "exampleMod"));
@@ -156,26 +160,26 @@ public class ExampleMod
     public static class Events {
         @SubscribeEvent
         public static void onKeyInput(InputEvent.KeyInputEvent event) {
-            ArrayList<KeyBinding> keyBindings = ExampleMod.keyBindings;
+            ArrayList<KeyBinding> keyBindings = combatRevamp.keyBindings;
 
             if (keyBindings.get(0).isKeyDown()) {
                 boolean canDash = true;
-                if (!ExampleMod.canDashAir) {
+                if (!combatRevamp.canDashAir) {
                     canDash = false;
                 }
-                if ((ExampleMod.lastDash+ExampleMod.timeBetweenDashes) > (System.currentTimeMillis() / 100L)) {
+                if ((combatRevamp.lastDash+ combatRevamp.timeBetweenDashes) > (System.currentTimeMillis() / 100L)) {
                     canDash = false;
                 }
                 if (canDash) {
                     PlayerEntity player = Minecraft.getInstance().player;
-                    if (ExampleMod.currentStamina >= ExampleMod.dashStaminaUsage) {
-                        if (ExampleMod.dashType == 0) {
+                    if (combatRevamp.currentStamina >= combatRevamp.dashStaminaUsage) {
+                        if (combatRevamp.dashType == 0) {
                             Vector3d motion = player.getMotion();
-                            player.setVelocity(motion.x * ExampleMod.dashMultiplier, motion.y, motion.z * ExampleMod.dashMultiplier);
-                        } else if (ExampleMod.dashType == 1 || ExampleMod.dashType == 2) {
-                            Vector2f inputMotion = ExampleMod.movementInputObject.getMoveVector();
+                            player.setVelocity(motion.x * combatRevamp.dashMultiplier, motion.y, motion.z * combatRevamp.dashMultiplier);
+                        } else if (combatRevamp.dashType == 1 || combatRevamp.dashType == 2) {
+                            Vector2f inputMotion = combatRevamp.movementInputObject.getMoveVector();
                             Vector3d playerLookVec = player.getLookVec();
-                            double angle = ExampleMod.cameraAngle();
+                            double angle = combatRevamp.cameraAngle();
                             List<Integer> keyAngles = new LinkedList<Integer>();
                             if (inputMotion.x == 1) {
                                 keyAngles.add(90); // a
@@ -204,88 +208,70 @@ public class ExampleMod
                             //      LOGGER.info(playerLookVec);
                             //      LOGGER.info("("+inputMotion.x+", "+inputMotion.y+")");
                             angle = angle * (Math.PI / 180);
-                            if (ExampleMod.dashType == 1) {
-                                player.setVelocity(Math.sin(angle) * ExampleMod.dashAbsolute, player.getMotion().y, Math.cos(angle) * ExampleMod.dashAbsolute);
-                            } else if (ExampleMod.dashType == 2) {
-                                player.setVelocity(Math.sin(angle) * ExampleMod.dashAbsolute, ExampleMod.dashYMomentum, Math.cos(angle) * ExampleMod.dashAbsolute);
+                            if (combatRevamp.dashType == 1) {
+                                player.setVelocity(Math.sin(angle) * combatRevamp.dashAbsolute, player.getMotion().y, Math.cos(angle) * combatRevamp.dashAbsolute);
+                            } else if (combatRevamp.dashType == 2) {
+                                player.setVelocity(Math.sin(angle) * combatRevamp.dashAbsolute, combatRevamp.dashYMomentum, Math.cos(angle) * combatRevamp.dashAbsolute);
                             }
                         }
-                        ExampleMod.lastDash = (System.currentTimeMillis() / 100L);
-                        ExampleMod.canDashAir = false;
-                        ExampleMod.currentStamina -= ExampleMod.dashStaminaUsage;
-                        ExampleMod.lastStaminaUsage = System.currentTimeMillis();
+                        combatRevamp.lastDash = (System.currentTimeMillis() / 100L);
+                        combatRevamp.canDashAir = false;
+                        combatRevamp.currentStamina -= combatRevamp.dashStaminaUsage;
+                        combatRevamp.lastStaminaUsage = System.currentTimeMillis();
                     } else {
                         // some kind of notification that you dont have enough stamina. sound effect?
                         LOGGER.info("dash not done cause not enough stamina");
                     }
                 }
             }
-            if (Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown()) {
-                PlayerEntity player = Minecraft.getInstance().player;
-                if (!player.isOnGround()) {
-                    boolean canExtraJump = true;
-                    if (ExampleMod.NumberOfJumps-1 <= ExampleMod.extraJumpsUsed) {
-                        canExtraJump = false;
-                    }
-                    if (ExampleMod.waitingForKeyDownJump) {
-                        canExtraJump = false;
-                    }
-                    if (canExtraJump) {
-                        Vector3d motion = player.getMotion();
-                        player.setVelocity(motion.x, ExampleMod.extraJumpAbsolute, motion.z);
-                        ExampleMod.extraJumpsUsed++;
 
-                    }
-                }
-                ExampleMod.waitingForKeyDownJump = true;
-            }
         }
 
         @SubscribeEvent
         public static void onTick(TickEvent event) { // DO NOT ASSUME EACH TICK IS 50MS
             PlayerEntity player = Minecraft.getInstance().player;
-            if (!(ExampleMod.canDashAir && !(ExampleMod.NumberOfJumps-1 <= ExampleMod.extraJumpsUsed))) { // deal with onGround stuff for dash/double jump
+            if (!(combatRevamp.canDashAir && !(combatRevamp.NumberOfJumps-1 <= combatRevamp.extraJumpsUsed))) { // deal with onGround stuff for dash/double jump
                 try {
                     if (player.isOnGround()) {
-                        ExampleMod.canDashAir = true;
-                        ExampleMod.extraJumpsUsed = 0;
+                        combatRevamp.canDashAir = true;
+                        combatRevamp.extraJumpsUsed = 0;
                     }
                 } catch (NullPointerException e) {}
             }
 
-            if (ExampleMod.waitingForKeyDownJump) {
+            if (combatRevamp.waitingForKeyDownJump) {
                 if (!Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown()) {
-                    ExampleMod.waitingForKeyDownJump = false;
+                    combatRevamp.waitingForKeyDownJump = false;
                 }
             }
 
-            if (ExampleMod.currentStamina < ExampleMod.maxStamina) { // deal with upping stamina in accordance to timeDelay & sps
-                if (ExampleMod.lastStaminaUsage+(ExampleMod.staminaRechangeTimeDelay*1000) < System.currentTimeMillis()) {
-                    if (ExampleMod.lastStaminaUpdate+ExampleMod.staminaUpdateRate <= System.currentTimeMillis()) {
-                        if ((System.currentTimeMillis() - ExampleMod.lastStaminaUpdate) > 100) {
-                            ExampleMod.lastStaminaUpdate = System.currentTimeMillis();
+            if (combatRevamp.currentStamina < combatRevamp.maxStamina) { // deal with upping stamina in accordance to timeDelay & sps
+                if (combatRevamp.lastStaminaUsage+(combatRevamp.staminaRechangeTimeDelay*1000) < System.currentTimeMillis()) {
+                    if (combatRevamp.lastStaminaUpdate+ combatRevamp.staminaUpdateRate <= System.currentTimeMillis()) {
+                        if ((System.currentTimeMillis() - combatRevamp.lastStaminaUpdate) > 100) {
+                            combatRevamp.lastStaminaUpdate = System.currentTimeMillis();
                         }
-                        ExampleMod.currentStamina = Math.min(100, ExampleMod.currentStamina + (ExampleMod.staminaPerSecond / (1000.0 / (System.currentTimeMillis() - ExampleMod.lastStaminaUpdate))));
-                        ExampleMod.lastStaminaUpdate = System.currentTimeMillis();
+                        combatRevamp.currentStamina = Math.min(100, combatRevamp.currentStamina + (combatRevamp.staminaPerSecond / (1000.0 / (System.currentTimeMillis() - combatRevamp.lastStaminaUpdate))));
+                        combatRevamp.lastStaminaUpdate = System.currentTimeMillis();
                     }
                 }
             }
             try {
-                player.experienceLevel = (int) Math.floor(ExampleMod.currentStamina);
-                player.experience = (float) ExampleMod.currentStamina / ExampleMod.maxStamina;
+                player.experienceLevel = (int) Math.floor(combatRevamp.currentStamina);
+                player.experience = (float) combatRevamp.currentStamina / combatRevamp.maxStamina;
             } catch (NullPointerException e) {}
         }
 
         @SubscribeEvent
-        public static void onLivingFall(LivingFallEvent event) {
+        public static void onLivingFall(LivingFallEvent event) { // make it where you can fall 6 blocks instead of 3 for fall dmg
             if (event.getEntity() instanceof PlayerEntity) {
                 event.setDistance(event.getDistance()-3);
             }
         }
 
         @SubscribeEvent
-        public static void onMovementInput(InputUpdateEvent event) {
-            ExampleMod.movementInputObject = event.getMovementInput();
+        public static void onMovementInput(InputUpdateEvent event) { // give mod access to MovementInput
+            combatRevamp.movementInputObject = event.getMovementInput();
         }
     }
 }

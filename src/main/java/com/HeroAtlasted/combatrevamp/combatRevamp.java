@@ -6,13 +6,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
@@ -28,8 +25,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -89,6 +84,8 @@ public class combatRevamp
 
         MinecraftForge.EVENT_BUS.register(new Events());
         MinecraftForge.EVENT_BUS.register(new extraJumps());
+        MinecraftForge.EVENT_BUS.register(new dash());
+        MinecraftForge.EVENT_BUS.register(new stamina());
 
      //   BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
@@ -100,8 +97,6 @@ public class combatRevamp
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-
-        MinecraftForge.EVENT_BUS.register(new extraJumps());
 
         // setup keybinding
         keyBindings.add(new KeyBinding("Dash", 98, "exampleMod"));
@@ -156,110 +151,6 @@ public class combatRevamp
 
     @Mod.EventBusSubscriber()
     public static class Events {
-        @SubscribeEvent
-        public static void onKeyInput(InputEvent.KeyInputEvent event) {
-            ArrayList<KeyBinding> keyBindings = combatRevamp.keyBindings;
-
-            if (keyBindings.get(0).isKeyDown()) {
-                boolean canDash = true;
-                if (!combatRevamp.canDashAir) {
-                    canDash = false;
-                }
-                if ((combatRevamp.lastDash+ combatRevamp.timeBetweenDashes) > (System.currentTimeMillis() / 100L)) {
-                    canDash = false;
-                }
-                if (canDash) {
-                    PlayerEntity player = Minecraft.getInstance().player;
-                    if (combatRevamp.currentStamina >= combatRevamp.dashStaminaUsage) {
-                        if (combatRevamp.dashType == 0) {
-                            Vector3d motion = player.getMotion();
-                            player.setVelocity(motion.x * combatRevamp.dashMultiplier, motion.y, motion.z * combatRevamp.dashMultiplier);
-                        } else if (combatRevamp.dashType == 1 || combatRevamp.dashType == 2) {
-                            Vector2f inputMotion = combatRevamp.movementInputObject.getMoveVector();
-                            Vector3d playerLookVec = player.getLookVec();
-                            double angle = combatRevamp.cameraAngle();
-                            List<Integer> keyAngles = new LinkedList<Integer>();
-                            if (inputMotion.x == 1) {
-                                keyAngles.add(90); // a
-                            } else if (inputMotion.x == -1) {
-                                keyAngles.add(270); // d
-                            }
-                            if (inputMotion.y == 1) {
-                                keyAngles.add(0); // w
-                            } else if (inputMotion.y == -1) {
-                                keyAngles.add(180); // s
-                            }
-                            int avg = 0;
-                            for (int i = 0; i < keyAngles.size(); i++) {
-                                avg += keyAngles.get(i);
-                            }
-                            if (keyAngles.size() > 0) {
-                                avg /= keyAngles.size();
-                            }
-                            if (inputMotion.x == -1 && inputMotion.y == 1) { // wd doesnt work and i dont wanna fix it properly.
-                                avg = 315;
-                            }
-                            //      LOGGER.info("Camera Angle: "+angle);
-                            //      LOGGER.info("Key Angle: "+avg);
-                            angle += avg;
-                            //      LOGGER.info("Total Angle: "+angle);
-                            //      LOGGER.info(playerLookVec);
-                            //      LOGGER.info("("+inputMotion.x+", "+inputMotion.y+")");
-                            angle = angle * (Math.PI / 180);
-                            if (combatRevamp.dashType == 1) {
-                                player.setVelocity(Math.sin(angle) * combatRevamp.dashAbsolute, player.getMotion().y, Math.cos(angle) * combatRevamp.dashAbsolute);
-                            } else if (combatRevamp.dashType == 2) {
-                                player.setVelocity(Math.sin(angle) * combatRevamp.dashAbsolute, combatRevamp.dashYMomentum, Math.cos(angle) * combatRevamp.dashAbsolute);
-                            }
-                        }
-                        combatRevamp.lastDash = (System.currentTimeMillis() / 100L);
-                        combatRevamp.canDashAir = false;
-                        combatRevamp.currentStamina -= combatRevamp.dashStaminaUsage;
-                        combatRevamp.lastStaminaUsage = System.currentTimeMillis();
-                    } else {
-                        // some kind of notification that you dont have enough stamina. sound effect?
-                        LOGGER.info("dash not done cause not enough stamina");
-                    }
-                }
-            }
-
-        }
-
-        @SubscribeEvent
-        public static void onTick(TickEvent event) { // DO NOT ASSUME EACH TICK IS 50MS
-            PlayerEntity player = Minecraft.getInstance().player;
-            if (!(combatRevamp.canDashAir && !(combatRevamp.NumberOfJumps-1 <= combatRevamp.extraJumpsUsed))) { // deal with onGround stuff for dash/double jump
-                try {
-                    if (player.isOnGround()) {
-                        combatRevamp.canDashAir = true;
-                        combatRevamp.extraJumpsUsed = 0;
-                    }
-                } catch (NullPointerException e) {}
-            }
-
-            if (combatRevamp.waitingForKeyDownJump) {
-                if (!Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown()) {
-                    combatRevamp.waitingForKeyDownJump = false;
-                }
-            }
-
-            if (combatRevamp.currentStamina < combatRevamp.maxStamina) { // deal with upping stamina in accordance to timeDelay & sps
-                if (combatRevamp.lastStaminaUsage+(combatRevamp.staminaRechangeTimeDelay*1000) < System.currentTimeMillis()) {
-                    if (combatRevamp.lastStaminaUpdate+ combatRevamp.staminaUpdateRate <= System.currentTimeMillis()) {
-                        if ((System.currentTimeMillis() - combatRevamp.lastStaminaUpdate) > 100) {
-                            combatRevamp.lastStaminaUpdate = System.currentTimeMillis();
-                        }
-                        combatRevamp.currentStamina = Math.min(100, combatRevamp.currentStamina + (combatRevamp.staminaPerSecond / (1000.0 / (System.currentTimeMillis() - combatRevamp.lastStaminaUpdate))));
-                        combatRevamp.lastStaminaUpdate = System.currentTimeMillis();
-                    }
-                }
-            }
-            try {
-                player.experienceLevel = (int) Math.floor(combatRevamp.currentStamina);
-                player.experience = (float) combatRevamp.currentStamina / combatRevamp.maxStamina;
-            } catch (NullPointerException e) {}
-        }
-
         @SubscribeEvent
         public static void onLivingFall(LivingFallEvent event) { // make it where you can fall 6 blocks instead of 3 for fall dmg
             if (event.getEntity() instanceof PlayerEntity) {

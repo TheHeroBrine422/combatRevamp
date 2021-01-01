@@ -14,7 +14,6 @@ public class stamina {
     @SubscribeEvent
     public static void onTick(TickEvent event) { // DO NOT ASSUME EACH TICK IS 50MS
         PlayerEntity player = Minecraft.getInstance().player;
-        LOGGER.info("stamina: "+combatRevamp.currentStamina);
         if (combatRevamp.currentStamina < combatRevamp.maxStamina) { // deal with upping stamina in accordance to timeDelay & sps
             if (combatRevamp.lastStaminaUsage+(combatRevamp.staminaRechangeTimeDelay*1000) < System.currentTimeMillis()) {
                 if (combatRevamp.lastStaminaUpdate+ combatRevamp.staminaUpdateRate <= System.currentTimeMillis()) {

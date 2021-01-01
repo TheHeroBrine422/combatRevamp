@@ -1,15 +1,21 @@
 // Made with Blockbench 3.7.4
 // Exported for Minecraft version 1.15
 // Paste this class into your mod and generate all required imports
+package com.HeroAtlasted.combatrevamp;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.Entity;
 
-public class custom_model extends EntityModel<Entity> {
+public class testGolemModel<T extends Entity> extends EntityModel<T> {
 	private final ModelRenderer bb_main;
 	private final ModelRenderer cube_r1;
 	private final ModelRenderer cube_r2;
 	private final ModelRenderer cube_r3;
 
-	public custom_model() {
+	public testGolemModel() {
 		textureWidth = 128;
 		textureHeight = 128;
 

@@ -1,10 +1,15 @@
 package com.HeroAtlasted.combatrevamp;
 
-import com.HeroAtlasted.combatrevamp.events.*;
+import com.HeroAtlasted.combatrevamp.events.dash;
+import com.HeroAtlasted.combatrevamp.events.extraJumps;
+import com.HeroAtlasted.combatrevamp.events.movementInput;
+import com.HeroAtlasted.combatrevamp.events.stamina;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.vector.Vector3d;
@@ -13,6 +18,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -20,6 +26,8 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -66,10 +74,14 @@ public class combatRevamp
     public static long lastStaminaUsage = 0; // unix Epoch in ms
     public static long lastStaminaUpdate = 0; // unix epoch in ms
     public static boolean waitingForKeyDownJump = false;
+    public static EntityType<testGolemEntity> TESTGOLEM_ENTITY = null;
 
-   // private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, "examplemod");
 
-  //  public static final RegistryObject<Block> ROCK_BLOCK = BLOCKS.register("rock", () -> new Block(Block.Properties.create(Material.ROCK)));
+    private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, "combatrevamp");
+
+
+
+    //public static final RegistryObject<Block> ROCK_BLOCK = BLOCKS.register("rock", () -> new Block(Block.Properties.create(Material.ROCK)));
 
     public combatRevamp() {
         // Register the setup method for modloading
@@ -85,9 +97,15 @@ public class combatRevamp
         MinecraftForge.EVENT_BUS.register(new dash());
         MinecraftForge.EVENT_BUS.register(new stamina());
         MinecraftForge.EVENT_BUS.register(new movementInput());
-        MinecraftForge.EVENT_BUS.register(new fallDamage());
+        //MinecraftForge.EVENT_BUS.register(new fallDamage());
+
+        ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
      //   BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        TESTGOLEM_ENTITY = EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).build("test_golem");
+        ENTITIES.register("test_golem", () -> TESTGOLEM_ENTITY);
+
+
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -109,6 +127,7 @@ public class combatRevamp
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
+        RenderingRegistry.registerEntityRenderingHandler(TESTGOLEM_ENTITY, testGolemRenderFactory.INSTANCE);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)

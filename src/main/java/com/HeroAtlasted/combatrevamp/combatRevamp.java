@@ -1,4 +1,4 @@
-package com.HeroAtlasted.combatRevamp;
+package com.HeroAtlasted.combatrevamp;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -32,10 +32,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.HeroAtlasted.combatRevamp.extraJumps;
-
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod("combatRevamp")
+@Mod("combatrevamp")
 public class combatRevamp
 {
     // Settings

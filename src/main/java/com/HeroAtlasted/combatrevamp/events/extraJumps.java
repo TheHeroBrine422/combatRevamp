@@ -1,5 +1,6 @@
-package com.HeroAtlasted.combatrevamp;
+package com.HeroAtlasted.combatrevamp.events;
 
+import com.HeroAtlasted.combatrevamp.combatRevamp;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;

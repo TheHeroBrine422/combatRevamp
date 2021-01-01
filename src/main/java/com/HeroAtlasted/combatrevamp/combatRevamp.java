@@ -1,5 +1,6 @@
 package com.HeroAtlasted.combatrevamp;
 
+import com.HeroAtlasted.combatrevamp.events.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -7,10 +8,8 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -32,12 +31,12 @@ import java.util.stream.Collectors;
 public class combatRevamp
 {
     // Settings
-    static long timeBetweenDashes = 5; // tenths of a second
-    static double dashMultiplier = 10;
-    static double dashAbsolute = 2;
-    static double dashYMomentum = 1;
-    static int dashType = 1;
-    static int dashStaminaUsage = 20;
+    public static long timeBetweenDashes = 5; // tenths of a second
+    public static double dashMultiplier = 10;
+    public static double dashAbsolute = 2;
+    public static double dashYMomentum = 1;
+    public static int dashType = 1;
+    public static int dashStaminaUsage = 20;
     /*
     Dash Types:
     0 - dash that goes in current momentum direction (multiplies x/z by dashMultiplier)
@@ -45,28 +44,28 @@ public class combatRevamp
     2 - dash 1 and set y velocity to dashYMomentum
      */
 
-    static int NumberOfJumps = 3;
-    static double extraJumpAbsolute = 0.6; // 0.4 = 1 block.    0.6 = 2.2 blocks.   1 = 5 blocks.
+    public static int NumberOfJumps = 3;
+    public static double extraJumpAbsolute = 0.6; // 0.4 = 1 block.    0.6 = 2.2 blocks.   1 = 5 blocks.
 
-    static int maxStamina = 100;
-    static double staminaRechangeTimeDelay = 1;
-    static int staminaPerSecond = 10;
-    static int staminaUpdateRate = 10; // ms.
+    public static int maxStamina = 100;
+    public static double staminaRechangeTimeDelay = 1;
+    public static int staminaPerSecond = 10;
+    public static int staminaUpdateRate = 10; // ms.
 
 
     // Global Vars
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
 
-    static long lastDash = 0;
-    static ArrayList<KeyBinding> keyBindings = new ArrayList<>();
-    static boolean canDashAir = true;
-    static int extraJumpsUsed = 0;
-    static MovementInput movementInputObject;
-    static double currentStamina = 100;
-    static long lastStaminaUsage = 0; // unix Epoch in ms
-    static long lastStaminaUpdate = 0; // unix epoch in ms
-    static boolean waitingForKeyDownJump = false;
+    public static long lastDash = 0;
+    public static ArrayList<KeyBinding> keyBindings = new ArrayList<>();
+    public static boolean canDashAir = true;
+    public static int extraJumpsUsed = 0;
+    public static MovementInput movementInputObject;
+    public static double currentStamina = 100;
+    public static long lastStaminaUsage = 0; // unix Epoch in ms
+    public static long lastStaminaUpdate = 0; // unix epoch in ms
+    public static boolean waitingForKeyDownJump = false;
 
    // private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, "examplemod");
 
@@ -82,10 +81,11 @@ public class combatRevamp
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
-        MinecraftForge.EVENT_BUS.register(new Events());
         MinecraftForge.EVENT_BUS.register(new extraJumps());
         MinecraftForge.EVENT_BUS.register(new dash());
         MinecraftForge.EVENT_BUS.register(new stamina());
+        MinecraftForge.EVENT_BUS.register(new movementInput());
+        MinecraftForge.EVENT_BUS.register(new fallDamage());
 
      //   BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
@@ -151,16 +151,5 @@ public class combatRevamp
 
     @Mod.EventBusSubscriber()
     public static class Events {
-        @SubscribeEvent
-        public static void onLivingFall(LivingFallEvent event) { // make it where you can fall 6 blocks instead of 3 for fall dmg
-            if (event.getEntity() instanceof PlayerEntity) {
-                event.setDistance(event.getDistance()-3);
-            }
-        }
-
-        @SubscribeEvent
-        public static void onMovementInput(InputUpdateEvent event) { // give mod access to MovementInput
-            combatRevamp.movementInputObject = event.getMovementInput();
-        }
     }
 }

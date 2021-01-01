@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("combatrevamp")
-public class combatRevamp
+public class combatrevamp
 {
     // Settings
     public static long timeBetweenDashes = 5; // tenths of a second
@@ -83,7 +83,7 @@ public class combatRevamp
 
     //public static final RegistryObject<Block> ROCK_BLOCK = BLOCKS.register("rock", () -> new Block(Block.Properties.create(Material.ROCK)));
 
-    public combatRevamp() {
+    public combatrevamp() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading

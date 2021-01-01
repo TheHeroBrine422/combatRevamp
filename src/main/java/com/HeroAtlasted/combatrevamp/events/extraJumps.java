@@ -1,6 +1,6 @@
 package com.HeroAtlasted.combatrevamp.events;
 
-import com.HeroAtlasted.combatrevamp.combatRevamp;
+import com.HeroAtlasted.combatrevamp.combatrevamp;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
@@ -21,36 +21,36 @@ public class extraJumps {
             PlayerEntity player = Minecraft.getInstance().player;
             if (!player.isOnGround()) {
                 boolean canExtraJump = true;
-                if (combatRevamp.NumberOfJumps - 1 <= combatRevamp.extraJumpsUsed) {
+                if (combatrevamp.NumberOfJumps - 1 <= combatrevamp.extraJumpsUsed) {
                     canExtraJump = false;
                 }
-                if (combatRevamp.waitingForKeyDownJump) {
+                if (combatrevamp.waitingForKeyDownJump) {
                     canExtraJump = false;
                 }
                 if (canExtraJump) {
                     Vector3d motion = player.getMotion();
-                    player.setVelocity(motion.x, combatRevamp.extraJumpAbsolute, motion.z);
-                    combatRevamp.extraJumpsUsed++;
+                    player.setVelocity(motion.x, combatrevamp.extraJumpAbsolute, motion.z);
+                    combatrevamp.extraJumpsUsed++;
 
                 }
             }
-            combatRevamp.waitingForKeyDownJump = true;
+            combatrevamp.waitingForKeyDownJump = true;
         }
     }
 
     @SubscribeEvent
     public void onTick(TickEvent event) { // DO NOT ASSUME EACH TICK IS 50MS
-        if (combatRevamp.waitingForKeyDownJump) {
+        if (combatrevamp.waitingForKeyDownJump) {
             if (!Minecraft.getInstance().gameSettings.keyBindJump.isKeyDown()) {
-                combatRevamp.waitingForKeyDownJump = false;
+                combatrevamp.waitingForKeyDownJump = false;
             }
         }
 
-        if (combatRevamp.NumberOfJumps-1 <= combatRevamp.extraJumpsUsed) {
+        if (combatrevamp.NumberOfJumps-1 <= combatrevamp.extraJumpsUsed) {
             PlayerEntity player = Minecraft.getInstance().player;
             try {
                 if (player.isOnGround()) {
-                    combatRevamp.extraJumpsUsed = 0;
+                    combatrevamp.extraJumpsUsed = 0;
                 }
             } catch (NullPointerException e) {}
         }

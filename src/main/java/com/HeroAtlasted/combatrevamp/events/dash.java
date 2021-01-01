@@ -1,6 +1,6 @@
 package com.HeroAtlasted.combatrevamp.events;
 
-import com.HeroAtlasted.combatrevamp.combatRevamp;
+import com.HeroAtlasted.combatrevamp.combatrevamp;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,26 +22,26 @@ public class dash {
     private static final Logger LOGGER = LogManager.getLogger();
     @SubscribeEvent
     public static void onKeyInput(InputEvent.KeyInputEvent event) {
-        ArrayList<KeyBinding> keyBindings = combatRevamp.keyBindings;
+        ArrayList<KeyBinding> keyBindings = combatrevamp.keyBindings;
 
         if (keyBindings.get(0).isKeyDown()) {
             boolean canDash = true;
-            if (!combatRevamp.canDashAir) {
+            if (!combatrevamp.canDashAir) {
                 canDash = false;
             }
-            if ((combatRevamp.lastDash+ combatRevamp.timeBetweenDashes) > (System.currentTimeMillis() / 100L)) {
+            if ((combatrevamp.lastDash+ combatrevamp.timeBetweenDashes) > (System.currentTimeMillis() / 100L)) {
                 canDash = false;
             }
             if (canDash) {
                 PlayerEntity player = Minecraft.getInstance().player;
-                if (combatRevamp.currentStamina >= combatRevamp.dashStaminaUsage) {
-                    if (combatRevamp.dashType == 0) {
+                if (combatrevamp.currentStamina >= combatrevamp.dashStaminaUsage) {
+                    if (combatrevamp.dashType == 0) {
                         Vector3d motion = player.getMotion();
-                        player.setVelocity(motion.x * combatRevamp.dashMultiplier, motion.y, motion.z * combatRevamp.dashMultiplier);
-                    } else if (combatRevamp.dashType == 1 || combatRevamp.dashType == 2) {
-                        Vector2f inputMotion = combatRevamp.movementInputObject.getMoveVector();
+                        player.setVelocity(motion.x * combatrevamp.dashMultiplier, motion.y, motion.z * combatrevamp.dashMultiplier);
+                    } else if (combatrevamp.dashType == 1 || combatrevamp.dashType == 2) {
+                        Vector2f inputMotion = combatrevamp.movementInputObject.getMoveVector();
                         Vector3d playerLookVec = player.getLookVec();
-                        double angle = combatRevamp.cameraAngle();
+                        double angle = combatrevamp.cameraAngle();
                         List<Integer> keyAngles = new LinkedList<Integer>();
                         if (inputMotion.x == 1) {
                             keyAngles.add(90); // a
@@ -70,16 +70,16 @@ public class dash {
                         //      LOGGER.info(playerLookVec);
                         //      LOGGER.info("("+inputMotion.x+", "+inputMotion.y+")");
                         angle = angle * (Math.PI / 180);
-                        if (combatRevamp.dashType == 1) {
-                            player.setVelocity(Math.sin(angle) * combatRevamp.dashAbsolute, player.getMotion().y, Math.cos(angle) * combatRevamp.dashAbsolute);
-                        } else if (combatRevamp.dashType == 2) {
-                            player.setVelocity(Math.sin(angle) * combatRevamp.dashAbsolute, combatRevamp.dashYMomentum, Math.cos(angle) * combatRevamp.dashAbsolute);
+                        if (combatrevamp.dashType == 1) {
+                            player.setVelocity(Math.sin(angle) * combatrevamp.dashAbsolute, player.getMotion().y, Math.cos(angle) * combatrevamp.dashAbsolute);
+                        } else if (combatrevamp.dashType == 2) {
+                            player.setVelocity(Math.sin(angle) * combatrevamp.dashAbsolute, combatrevamp.dashYMomentum, Math.cos(angle) * combatrevamp.dashAbsolute);
                         }
                     }
-                    combatRevamp.lastDash = (System.currentTimeMillis() / 100L);
-                    combatRevamp.canDashAir = false;
-                    combatRevamp.currentStamina -= combatRevamp.dashStaminaUsage;
-                    combatRevamp.lastStaminaUsage = System.currentTimeMillis();
+                    combatrevamp.lastDash = (System.currentTimeMillis() / 100L);
+                    combatrevamp.canDashAir = false;
+                    combatrevamp.currentStamina -= combatrevamp.dashStaminaUsage;
+                    combatrevamp.lastStaminaUsage = System.currentTimeMillis();
                 } else {
                     // some kind of notification that you dont have enough stamina. sound effect?
                     LOGGER.info("dash not done cause not enough stamina");
@@ -91,10 +91,10 @@ public class dash {
     @SubscribeEvent
     public static void onTick(TickEvent event) { // DO NOT ASSUME EACH TICK IS 50MS
         PlayerEntity player = Minecraft.getInstance().player;
-        if (!combatRevamp.canDashAir) { // deal with onGround stuff for dash/double jump
+        if (!combatrevamp.canDashAir) { // deal with onGround stuff for dash/double jump
             try {
                 if (player.isOnGround()) {
-                    combatRevamp.canDashAir = true;
+                    combatrevamp.canDashAir = true;
                 }
             } catch (NullPointerException e) {}
         }

@@ -10,6 +10,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.vector.Vector3d;
@@ -101,8 +103,9 @@ public class combatrevamp
 
         ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
-     //   BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        TESTGOLEM_ENTITY = EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).build("test_golem");
+     //  BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        TESTGOLEM_ENTITY = EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).size(1F,1F).build("test_golem");
+        GlobalEntityTypeAttributes.put(TESTGOLEM_ENTITY, testGolemEntity.registerAttributes().create());
         ENTITIES.register("test_golem", () -> TESTGOLEM_ENTITY);
 
 

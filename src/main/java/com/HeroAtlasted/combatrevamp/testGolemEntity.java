@@ -19,7 +19,6 @@ public class testGolemEntity extends MonsterEntity {
 
     public testGolemEntity(EntityType<? extends testGolemEntity> type, World world) {
         super(type, world);
-        LOGGER.info("type: "+type + "        world: "+world);
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {

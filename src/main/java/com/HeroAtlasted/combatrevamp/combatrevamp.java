@@ -1,5 +1,7 @@
 package com.HeroAtlasted.combatrevamp;
 
+import com.HeroAtlasted.combatrevamp.entity.platillaEntity;
+import com.HeroAtlasted.combatrevamp.entity.platillaRenderFactory;
 import com.HeroAtlasted.combatrevamp.events.dash;
 import com.HeroAtlasted.combatrevamp.events.extraJumps;
 import com.HeroAtlasted.combatrevamp.events.movementInput;
@@ -77,6 +79,7 @@ public class combatrevamp
     public static long lastStaminaUpdate = 0; // unix epoch in ms
     public static boolean waitingForKeyDownJump = false;
     public static EntityType<testGolemEntity> TESTGOLEM_ENTITY = null;
+    public static EntityType<platillaEntity> PLATILLA_ENTITY;
 
 
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, "combatrevamp");
@@ -104,9 +107,12 @@ public class combatrevamp
         ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
      //  BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        TESTGOLEM_ENTITY = EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).size(1F,1F).build("test_golem");
-        GlobalEntityTypeAttributes.put(TESTGOLEM_ENTITY, testGolemEntity.registerAttributes().create());
-        ENTITIES.register("test_golem", () -> TESTGOLEM_ENTITY);
+        //TESTGOLEM_ENTITY = EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).size(1F,1F).build("test_golem");
+        //GlobalEntityTypeAttributes.put(TESTGOLEM_ENTITY, testGolemEntity.registerAttributes().create());
+        //ENTITIES.register("test_golem", () -> TESTGOLEM_ENTITY);
+        PLATILLA_ENTITY = EntityType.Builder.create(platillaEntity::new, EntityClassification.MONSTER).build("platilla");
+        GlobalEntityTypeAttributes.put(PLATILLA_ENTITY, platillaEntity.registerAttributes().create());
+        ENTITIES.register("platilla", () -> PLATILLA_ENTITY);
 
 
 
@@ -130,7 +136,8 @@ public class combatrevamp
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
-        RenderingRegistry.registerEntityRenderingHandler(TESTGOLEM_ENTITY, testGolemRenderFactory.INSTANCE);
+        //RenderingRegistry.registerEntityRenderingHandler(TESTGOLEM_ENTITY, testGolemRenderFactory.INSTANCE);
+        RenderingRegistry.registerEntityRenderingHandler(PLATILLA_ENTITY, platillaRenderFactory.INSTANCE);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)

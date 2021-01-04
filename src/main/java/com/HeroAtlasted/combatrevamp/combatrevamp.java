@@ -128,7 +128,7 @@ public class combatrevamp
 
         // setup keybinding
         keyBindings.add(new KeyBinding("Dash", 98, "exampleMod"));
-        event.enqueueWork(setAttributes::new);
+        event.enqueueWork(setAttributes::setup);
 
         for (int i = 0; i < keyBindings.size(); i++) {
             ClientRegistry.registerKeyBinding(keyBindings.get(i));

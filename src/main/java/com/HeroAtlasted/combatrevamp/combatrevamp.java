@@ -2,6 +2,7 @@ package com.HeroAtlasted.combatrevamp;
 
 import com.HeroAtlasted.combatrevamp.entity.platillaEntity;
 import com.HeroAtlasted.combatrevamp.entity.platillaRenderFactory;
+import com.HeroAtlasted.combatrevamp.entity.setAttributes;
 import com.HeroAtlasted.combatrevamp.events.dash;
 import com.HeroAtlasted.combatrevamp.events.extraJumps;
 import com.HeroAtlasted.combatrevamp.events.movementInput;
@@ -111,7 +112,7 @@ public class combatrevamp
         //GlobalEntityTypeAttributes.put(TESTGOLEM_ENTITY, testGolemEntity.registerAttributes().create());
         //ENTITIES.register("test_golem", () -> TESTGOLEM_ENTITY);
         PLATILLA_ENTITY = EntityType.Builder.create(platillaEntity::new, EntityClassification.MONSTER).build("platilla");
-        GlobalEntityTypeAttributes.put(PLATILLA_ENTITY, platillaEntity.registerAttributes().create());
+
         ENTITIES.register("platilla", () -> PLATILLA_ENTITY);
 
 
@@ -127,6 +128,7 @@ public class combatrevamp
 
         // setup keybinding
         keyBindings.add(new KeyBinding("Dash", 98, "exampleMod"));
+        event.enqueueWork(setAttributes::new);
 
         for (int i = 0; i < keyBindings.size(); i++) {
             ClientRegistry.registerKeyBinding(keyBindings.get(i));

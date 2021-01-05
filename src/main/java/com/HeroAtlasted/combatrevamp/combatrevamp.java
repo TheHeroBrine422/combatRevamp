@@ -127,12 +127,10 @@ public class combatrevamp
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
 
         // setup keybinding
-        keyBindings.add(new KeyBinding("Dash", 98, "exampleMod"));
+
         event.enqueueWork(setAttributes::setup);
 
-        for (int i = 0; i < keyBindings.size(); i++) {
-            ClientRegistry.registerKeyBinding(keyBindings.get(i));
-        }
+
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
@@ -140,6 +138,10 @@ public class combatrevamp
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
         //RenderingRegistry.registerEntityRenderingHandler(TESTGOLEM_ENTITY, testGolemRenderFactory.INSTANCE);
         RenderingRegistry.registerEntityRenderingHandler(PLATILLA_ENTITY, platillaRenderFactory.INSTANCE);
+        keyBindings.add(new KeyBinding("Dash", 98, "exampleMod"));
+        for (int i = 0; i < keyBindings.size(); i++) {
+            ClientRegistry.registerKeyBinding(keyBindings.get(i));
+        }
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)

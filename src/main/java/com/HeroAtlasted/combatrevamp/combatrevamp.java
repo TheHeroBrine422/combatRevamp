@@ -110,7 +110,7 @@ public class combatrevamp
 
         PLATILLA_ENTITY = EntityType.Builder.create(platillaEntity::new, EntityClassification.MONSTER).size(1F, 1F).build("platilla");
         ENTITIES.register("platilla", () -> PLATILLA_ENTITY);
-        TESTGOLEM_ENTITY = EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).size(1F, 1F).build("testgolem");
+        TESTGOLEM_ENTITY = EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).size(2.5F, 3.75F).build("testgolem");
         ENTITIES.register("testgolem", () -> TESTGOLEM_ENTITY);
 
 

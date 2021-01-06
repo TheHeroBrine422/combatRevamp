@@ -1,6 +1,5 @@
 package com.HeroAtlasted.combatrevamp.entity;
 
-import com.HeroAtlasted.combatrevamp.testGolemEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -9,8 +8,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeMod;
-
-import static net.minecraft.entity.ai.attributes.AttributeModifierMap.createMutableAttribute;
 
 @SuppressWarnings("EntityConstructor")
 public class platillaEntity extends MonsterEntity {

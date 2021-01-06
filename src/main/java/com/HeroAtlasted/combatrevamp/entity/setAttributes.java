@@ -10,5 +10,6 @@ public class setAttributes {
 
     public static void setup() {
         GlobalEntityTypeAttributes.put(combatrevamp.PLATILLA_ENTITY, platillaEntity.registerAttributes().create());
+        GlobalEntityTypeAttributes.put(combatrevamp.TESTGOLEM_ENTITY, testGolemEntity.registerAttributes().create());
     }
 }

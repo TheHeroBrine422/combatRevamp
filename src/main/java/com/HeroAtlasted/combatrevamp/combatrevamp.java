@@ -1,8 +1,6 @@
 package com.HeroAtlasted.combatrevamp;
 
-import com.HeroAtlasted.combatrevamp.entity.platillaEntity;
-import com.HeroAtlasted.combatrevamp.entity.platillaRenderFactory;
-import com.HeroAtlasted.combatrevamp.entity.setAttributes;
+import com.HeroAtlasted.combatrevamp.entity.*;
 import com.HeroAtlasted.combatrevamp.events.dash;
 import com.HeroAtlasted.combatrevamp.events.extraJumps;
 import com.HeroAtlasted.combatrevamp.events.movementInput;
@@ -13,8 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.vector.Vector3d;
@@ -79,7 +75,7 @@ public class combatrevamp
     public static long lastStaminaUsage = 0; // unix Epoch in ms
     public static long lastStaminaUpdate = 0; // unix epoch in ms
     public static boolean waitingForKeyDownJump = false;
-    public static EntityType<testGolemEntity> TESTGOLEM_ENTITY = null;
+    public static EntityType<testGolemEntity> TESTGOLEM_ENTITY;
     public static EntityType<platillaEntity> PLATILLA_ENTITY;
 
 
@@ -111,9 +107,11 @@ public class combatrevamp
         //TESTGOLEM_ENTITY = EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).size(1F,1F).build("test_golem");
         //GlobalEntityTypeAttributes.put(TESTGOLEM_ENTITY, testGolemEntity.registerAttributes().create());
         //ENTITIES.register("test_golem", () -> TESTGOLEM_ENTITY);
-        PLATILLA_ENTITY = EntityType.Builder.create(platillaEntity::new, EntityClassification.MONSTER).build("platilla");
 
+        PLATILLA_ENTITY = EntityType.Builder.create(platillaEntity::new, EntityClassification.MONSTER).size(1F, 1F).build("platilla");
         ENTITIES.register("platilla", () -> PLATILLA_ENTITY);
+        TESTGOLEM_ENTITY = EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).size(1F, 1F).build("testgolem");
+        ENTITIES.register("testgolem", () -> TESTGOLEM_ENTITY);
 
 
 
@@ -137,7 +135,11 @@ public class combatrevamp
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
         //RenderingRegistry.registerEntityRenderingHandler(TESTGOLEM_ENTITY, testGolemRenderFactory.INSTANCE);
-        RenderingRegistry.registerEntityRenderingHandler(PLATILLA_ENTITY, platillaRenderFactory.INSTANCE);
+
+        //RenderingRegistry.registerEntityRenderingHandler(PLATILLA_ENTITY, platillaRenderFactory.INSTANCE);
+        RenderingRegistry.registerEntityRenderingHandler(PLATILLA_ENTITY, platillaRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(TESTGOLEM_ENTITY, testGolemRenderer::new);
+
         keyBindings.add(new KeyBinding("Dash", 98, "exampleMod"));
         for (int i = 0; i < keyBindings.size(); i++) {
             ClientRegistry.registerKeyBinding(keyBindings.get(i));

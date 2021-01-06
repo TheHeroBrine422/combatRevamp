@@ -1,7 +1,6 @@
 package com.HeroAtlasted.combatrevamp.entity;
 
-import com.HeroAtlasted.combatrevamp.testGolemEntity;
-import com.HeroAtlasted.combatrevamp.testGolemModel;
+
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -12,11 +11,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class platillaRenderer extends MobRenderer<platillaEntity, platillaModel<platillaEntity>> {
 
     public platillaRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new platillaModel<>(), 0.5F);
+        super(renderManagerIn, new platillaModel<>(), 1F);
     }
 
     @Override
     public ResourceLocation getEntityTexture(platillaEntity entity) {
-        return new ResourceLocation("combatrevamp:platillaTexture.png");
+        ResourceLocation locator = new ResourceLocation("combatrevamp:textures/entity/platillatexture.png");
+
+        return locator;
     }
 }

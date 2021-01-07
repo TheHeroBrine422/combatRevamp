@@ -1,10 +1,7 @@
 package com.HeroAtlasted.combatrevamp;
 
 import com.HeroAtlasted.combatrevamp.entity.*;
-import com.HeroAtlasted.combatrevamp.events.dash;
-import com.HeroAtlasted.combatrevamp.events.extraJumps;
-import com.HeroAtlasted.combatrevamp.events.movementInput;
-import com.HeroAtlasted.combatrevamp.events.stamina;
+import com.HeroAtlasted.combatrevamp.events.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -18,6 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -75,8 +73,8 @@ public class combatrevamp
     public static long lastStaminaUsage = 0; // unix Epoch in ms
     public static long lastStaminaUpdate = 0; // unix epoch in ms
     public static boolean waitingForKeyDownJump = false;
-    public static EntityType<testGolemEntity> TESTGOLEM_ENTITY;
-    public static EntityType<platillaEntity> PLATILLA_ENTITY;
+    public static RegistryObject<EntityType<platillaEntity>> platillaRegister;
+    public static RegistryObject<EntityType<testGolemEntity>> testGolemRegister;
 
 
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, "combatrevamp");
@@ -99,21 +97,12 @@ public class combatrevamp
         MinecraftForge.EVENT_BUS.register(new dash());
         MinecraftForge.EVENT_BUS.register(new stamina());
         MinecraftForge.EVENT_BUS.register(new movementInput());
-        //MinecraftForge.EVENT_BUS.register(new fallDamage());
+        MinecraftForge.EVENT_BUS.register(new fallDamage());
 
         ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
-     //  BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        //TESTGOLEM_ENTITY = EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).size(1F,1F).build("test_golem");
-        //GlobalEntityTypeAttributes.put(TESTGOLEM_ENTITY, testGolemEntity.registerAttributes().create());
-        //ENTITIES.register("test_golem", () -> TESTGOLEM_ENTITY);
-
-        PLATILLA_ENTITY = EntityType.Builder.create(platillaEntity::new, EntityClassification.MONSTER).size(1F, 1F).build("platilla");
-        ENTITIES.register("platilla", () -> PLATILLA_ENTITY);
-        TESTGOLEM_ENTITY = EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).size(2.5F, 3.75F).build("testgolem");
-        ENTITIES.register("testgolem", () -> TESTGOLEM_ENTITY);
-
-
+        platillaRegister = ENTITIES.register("platilla", () -> EntityType.Builder.create(platillaEntity::new, EntityClassification.MONSTER).size(1F, 1F).build("platilla"));
+        testGolemRegister = ENTITIES.register("testgolem", () -> EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).size(2.5F, 3.75F).build("testgolem"));
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -134,11 +123,9 @@ public class combatrevamp
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
-        //RenderingRegistry.registerEntityRenderingHandler(TESTGOLEM_ENTITY, testGolemRenderFactory.INSTANCE);
 
-        //RenderingRegistry.registerEntityRenderingHandler(PLATILLA_ENTITY, platillaRenderFactory.INSTANCE);
-        RenderingRegistry.registerEntityRenderingHandler(PLATILLA_ENTITY, platillaRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(TESTGOLEM_ENTITY, testGolemRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(platillaRegister.get(), platillaRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(testGolemRegister.get(), testGolemRenderer::new);
 
         keyBindings.add(new KeyBinding("Dash", 98, "exampleMod"));
         for (int i = 0; i < keyBindings.size(); i++) {

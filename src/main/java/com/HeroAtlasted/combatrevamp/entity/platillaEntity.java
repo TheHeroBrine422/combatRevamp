@@ -22,46 +22,4 @@ public class platillaEntity extends MonsterEntity {
                 .createMutableAttribute(Attributes.MAX_HEALTH, 20D)
                 .createMutableAttribute(ForgeMod.SWIM_SPEED.get(), 0);
     }
-
-    @Override
-    protected SoundEvent getAmbientSound() {
-
-        return null;
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-
-        return null;
-    }
-
-    @Override
-    protected SoundEvent getDeathSound() {
-
-        return null;
-    }
-
-    @Override
-    public void livingTick() {
-
-        super.livingTick();
-    }
-
-    @Override
-    protected void registerData() {
-
-        super.registerData();
-    }
-
-    @Override
-    protected void updateAITasks() {
-
-        super.updateAITasks();
-    }
-
-    @Override
-    public boolean onLivingFall(float distance, float damageMultiplier) {
-
-        return false;
-    }
 }

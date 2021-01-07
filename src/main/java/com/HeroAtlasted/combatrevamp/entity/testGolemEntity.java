@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("EntityConstructor")
 public class testGolemEntity extends MonsterEntity {
-    private static final Logger LOGGER = LogManager.getLogger();
 
     public testGolemEntity(EntityType<? extends testGolemEntity> type, World world) {
         super(type, world);
@@ -24,24 +23,6 @@ public class testGolemEntity extends MonsterEntity {
         return MonsterEntity.func_234295_eP_()
                 .createMutableAttribute(Attributes.MAX_HEALTH, 20D)
                 .createMutableAttribute(ForgeMod.SWIM_SPEED.get(), 0);
-    }
-
-    @Override
-    protected SoundEvent getAmbientSound() {
-
-        return null;
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-
-        return null;
-    }
-
-    @Override
-    protected SoundEvent getDeathSound() {
-
-        return null;
     }
 
 }

@@ -2,6 +2,7 @@ package com.HeroAtlasted.combatrevamp;
 
 import com.HeroAtlasted.combatrevamp.entity.*;
 import com.HeroAtlasted.combatrevamp.events.*;
+import com.HeroAtlasted.combatrevamp.items.weapons.ShortbowItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -9,6 +10,9 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.Rarity;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.MinecraftForge;
@@ -79,6 +83,8 @@ public class combatrevamp
 
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, "combatrevamp");
 
+    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, "combatrevamp");
+
 
 
     //public static final RegistryObject<Block> ROCK_BLOCK = BLOCKS.register("rock", () -> new Block(Block.Properties.create(Material.ROCK)));
@@ -100,9 +106,13 @@ public class combatrevamp
         MinecraftForge.EVENT_BUS.register(new fallDamage());
 
         ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         platillaRegister = ENTITIES.register("platilla", () -> EntityType.Builder.create(platillaEntity::new, EntityClassification.MONSTER).size(1F, 1F).build("platilla"));
         testGolemRegister = ENTITIES.register("testgolem", () -> EntityType.Builder.create(testGolemEntity::new, EntityClassification.MONSTER).size(2.5F, 3.75F).build("testgolem"));
+
+        RegistryObject<Item> shortbowRegister = ITEMS.register("shortbow", () -> new ShortbowItem(new Item.Properties().group(ItemGroup.COMBAT).rarity(Rarity.COMMON)));
+        LOGGER.info("ShortbowRegister: "+shortbowRegister.toString());
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

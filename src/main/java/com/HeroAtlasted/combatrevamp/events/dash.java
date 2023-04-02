@@ -40,7 +40,6 @@ public class dash {
                         player.setVelocity(motion.x * combatrevamp.dashMultiplier, motion.y, motion.z * combatrevamp.dashMultiplier);
                     } else if (combatrevamp.dashType == 1 || combatrevamp.dashType == 2) {
                         Vector2f inputMotion = combatrevamp.movementInputObject.getMoveVector();
-                        Vector3d playerLookVec = player.getLookVec();
                         double angle = combatrevamp.cameraAngle();
                         List<Integer> keyAngles = new LinkedList<Integer>();
                         if (inputMotion.x == 1) {

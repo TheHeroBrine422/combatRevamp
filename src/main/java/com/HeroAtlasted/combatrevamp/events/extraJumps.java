@@ -52,7 +52,7 @@ public class extraJumps {
                 if (player.isOnGround()) {
                     combatrevamp.extraJumpsUsed = 0;
                 }
-            } catch (NullPointerException e) {}
+            } catch (NullPointerException ignored) {}
         }
     }
 }

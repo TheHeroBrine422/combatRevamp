@@ -42,11 +42,11 @@ import java.util.stream.Collectors;
 public class combatrevamp
 {
     // Settings
-    public static long timeBetweenDashes = 5; // tenths of a second
-    public static double dashMultiplier = 10;
-    public static double dashAbsolute = 2;
-    public static double dashYMomentum = 1;
-    public static int dashType = 1;
+    public static long timeBetweenDashes = 10; // tenths of a second
+    public static double dashMultiplier = 5;
+    public static double dashAbsolute = 0.8;
+    public static double dashYMomentum = 0.3;
+    public static int dashType = 2;
     public static int dashStaminaUsage = 20;
     /*
     Dash Types:
@@ -55,8 +55,8 @@ public class combatrevamp
     2 - dash 1 and set y velocity to dashYMomentum
      */
 
-    public static int NumberOfJumps = 3;
-    public static double extraJumpAbsolute = 0.6; // 0.4 = 1 block.    0.6 = 2.2 blocks.   1 = 5 blocks.
+    public static int NumberOfJumps = 2;
+    public static double extraJumpAbsolute = 0.45; // 0.4 = 1 block.    0.6 = 2.2 blocks.   1 = 5 blocks.
 
     public static int maxStamina = 100;
     public static double staminaRechangeTimeDelay = 1;
